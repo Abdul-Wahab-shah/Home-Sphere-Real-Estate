@@ -1,8 +1,8 @@
 import express  from "express";
-import {test} from '../controller/user.controller.js'
+import {task} from '../controller/user.controller.js'
 
 const router=express.Router();
 
-router.get('/task',test)
+router.get('/task',task)
 
 export default router;
