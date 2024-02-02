@@ -26,7 +26,7 @@ app.use((err, req, res, next) => {
     const message = err.message || "internal server error";
 
     return res.status(statusCode).json({
-        success: false, // Assuming this should be false for error responses
+        success: false,
         statusCode,
         message,
     });
