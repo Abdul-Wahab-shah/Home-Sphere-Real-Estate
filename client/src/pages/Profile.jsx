@@ -57,7 +57,8 @@ export default function Profile() {
             reject(error);
           },
           () => {
-            resolve(snapshot);
+            // This is the completion callback, but you need to resolve the snapshot here
+            resolve(uploadTask.snapshot);
           }
         );
       });
@@ -75,48 +76,51 @@ export default function Profile() {
   };
 
   const handleSubmit = async (e) => {
-    if (!currentUser || !currentUser._id)
-    e.preventDefault();
-    try {
-      dispatch(updateUserStart());
-      const res = await fetch(`/api/user/update/${currentUser._id}`,{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      if (data.success === false) {
-        dispatch(updateUserFailure(data.message));
-        return;
+    if (!currentUser || !currentUser._id) {
+      e.preventDefault();
+      try {
+        dispatch(updateUserStart());
+        const res = await fetch(`/api/user/update/${currentUser._id}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+        const data = await res.json();
+        if (data.success === false) {
+          dispatch(updateUserFailure(data.message));
+          return;
+        }
+  
+        dispatch(updateUserSuccess(data));
+        setUpdateSuccess(true);
+      } catch (error) {
+        dispatch(updateUserFailure(error.message));
       }
-
-      dispatch(updateUserSuccess(data));
-      setUpdateSuccess(true);
-    } catch (error) {
-      dispatch(updateUserFailure(error.message));
     }
   };
-
-  const handleDeleteUser = async () => {
-    if (!currentUser || !currentUser._id)
-    try {
-      dispatch(deleteUserStart());
-      const res = await fetch(`/api/user/delete/ ${currentUser._id}`, {
-        method: 'DELETE',
-      });
-      const data = await res.json();
-      if (data.success === false) {
-        dispatch(deleteUserFailure(data.message));
-        return;
+  
+  const handleDeleteUser = async (e) => {
+    if (!currentUser || !currentUser._id) {
+      try {
+        e.preventDefault(); // Add this line
+        dispatch(deleteUserStart());
+        const res = await fetch(`/api/user/delete/ ${currentUser._id}`, {
+          method: 'DELETE',
+        });
+        const data = await res.json();
+        if (data.success === false) {
+          dispatch(deleteUserFailure(data.message));
+          return;
+        }
+        dispatch(deleteUserSuccess(data));
+      } catch (error) {
+        dispatch(deleteUserFailure(error.message));
       }
-      dispatch(deleteUserSuccess(data));
-    } catch (error) {
-      dispatch(deleteUserFailure(error.message));
     }
   };
-
+  
   const handleSignOut = async () => {
     try {
       dispatch(signOutUserStart());
