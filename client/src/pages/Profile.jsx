@@ -99,6 +99,7 @@ export default function Profile() {
         dispatch(updateUserFailure(error.message));
       }
     }
+    
   };
   
   const handleDeleteUser = async (e) => {

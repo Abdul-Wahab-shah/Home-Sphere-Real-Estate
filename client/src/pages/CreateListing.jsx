@@ -131,7 +131,7 @@ function CreateListing() {
         setLoading(false);
         return;
       }
-      const res = await fetch("/api/listings/create/", {
+      const res = await fetch("/api/listing/create/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
